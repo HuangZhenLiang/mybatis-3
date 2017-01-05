@@ -264,5 +264,13 @@ public class XPathParser {
     XPathFactory factory = XPathFactory.newInstance();
     this.xpath = factory.newXPath();
   }
+  
+  public Document getDocument() {
+	  return this.document;
+  }
+  
+  public void setDocument(Document document) {
+	  this.document = document;
+  }
 
 }

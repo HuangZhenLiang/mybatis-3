@@ -21,10 +21,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
@@ -102,6 +104,32 @@ public class XMLMapperBuilder extends BaseBuilder {
   public XNode getSqlFragment(String refid) {
     return sqlFragments.get(refid);
   }
+  
+  private Set<String> getImportPath(XNode context) {
+	List<XNode> xNodes = context.evalNodes("/mapper/import");
+	Set<String> result = new HashSet<String>();
+	for (XNode xNode : xNodes) {
+	  result.add(xNode.getStringAttribute("path"));
+	}
+	return result;
+  }
+  
+  private void processImportResource(XNode context) {
+	Set<String> toProcess = getImportPath(context);
+	Set<String> processed = new HashSet<String>();
+	while (!toProcess.isEmpty()) {
+	  for (String path : toProcess) {
+		try {
+		  XMLMergeUtil.merge(context.getDocument(), path);
+		  } catch (Exception e) {
+			e.printStackTrace();
+		  }
+		  processed.add(path);
+		}
+		toProcess = getImportPath(context);
+		toProcess.removeAll(processed);
+	}
+  }
 
   private void configurationElement(XNode context) {
     try {
@@ -110,6 +138,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     	  throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
+      processImportResource(context);
       cacheRefElement(context.evalNode("cache-ref"));
       cacheElement(context.evalNode("cache"));
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));

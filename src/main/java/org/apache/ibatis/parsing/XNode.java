@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.w3c.dom.CharacterData;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -380,6 +381,14 @@ public class XNode {
       return data;
     }
     return null;
+  }
+  
+  public Document getDocument() {
+	  return this.xpathParser.getDocument();
+  }
+  
+  public void setDocument(Document document) {
+	  this.xpathParser.setDocument(document);
   }
 
 }

@@ -17,7 +17,7 @@
 
 -->
 
-<!ELEMENT mapper (cache-ref | cache | resultMap* | parameterMap* | sql* | insert* | update* | delete* | select* )+>
+<!ELEMENT mapper (cache-ref | cache | resultMap* | parameterMap* | sql* | insert* | update* | delete* | select* | import* )+>
 <!ATTLIST mapper
 xmlns:fo CDATA #IMPLIED
 namespace CDATA #IMPLIED
@@ -285,6 +285,11 @@ test CDATA #REQUIRED
 <!ELEMENT if (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST if
 test CDATA #REQUIRED
+>
+
+<!ELEMENT import (property*)>
+<!ATTLIST import
+path CDATA #IMPLIED
 >
 
 
